@@ -2,6 +2,7 @@
 
 ## 🗂️ Project Structure
 
+```
 ├── infra/                # Terraform code for EKS, VPC, ALB, etc.
 │   ├── main.tf
 │   ├── variables.tf
@@ -16,3 +17,4 @@
 │   ├── Dockerfile
 │   ├── mcp.yaml
 └── README.md
+```
