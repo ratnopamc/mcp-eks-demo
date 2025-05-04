@@ -12,8 +12,20 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
   enable_dns_hostnames = true
+  
+  # Tags required for EKS
+  private_subnet_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"           = 1
+  }
+
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                    = 1
+  }
 
   tags = {
     Name = "mcp-vpc"
+    Terraform = "true"
   }
 }

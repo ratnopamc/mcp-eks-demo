@@ -14,23 +14,23 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Removed exec plugin as this doesn't work with Terraform Cloud and TOFU controller plugin with backstage
+# Kubernetes provider configuration
 provider "kubernetes" {
   # The EKS cluster API endpoint and certificate are retrieved from the EKS module.
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
 
-  # exec {
-  #   # Retrieves an authentication token for Kubernetes API using the AWS CLI.
-  #   api_version = "client.authentication.k8s.io/v1beta1"
-  #   command     = "aws"
-  #   args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-  #   # Note: The AWS CLI must be installed locally where Terraform is executed.
-  # }
+  exec {
+    # Retrieves an authentication token for Kubernetes API using the AWS CLI.
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    # Note: The AWS CLI must be installed locally where Terraform is executed.
+  }
 }
 
-data "aws_eks_cluster_auth" "cluster"  {
+# AWS EKS cluster authentication data source
+data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_name
 }
 
@@ -95,4 +95,3 @@ data "aws_region" "current" {}
 data "aws_iam_session_context" "current" {
   arn = data.aws_caller_identity.current.arn
 }
-
