@@ -6,24 +6,6 @@ A Python-based implementation of a Machine Conversation Protocol (MCP) server th
 
 This project demonstrates how to build and deploy an MCP-compliant server that uses the FastMCP SDK to expose weather-related tools on an Amazon EKS cluster. The server supports both streaming (SSE) and non-streaming modes, allowing clients to retrieve current weather data and forecasts for cities around the world through an Application Load Balancer (ALB).
 
-## Project Structure
-
-```
-mcp-eks-example/
-├── README.md                       # Project documentation
-└── mcp-eks-demo/
-    ├── eks/                        # EKS cluster configuration
-    │   ├── terraform/              # Terraform files for EKS infrastructure
-    │   └── manifests/              # Kubernetes manifests for ALB Controller
-    └── mcp/                        # MCP Server implementation
-        ├── Dockerfile              # Docker configuration for MCP server
-        ├── build-deploy.sh         # Script to build and deploy to EKS
-        ├── server.py               # Main FastAPI server implementation
-        ├── mcp_client.py           # Python client for testing
-        └── tools/                  # MCP tools implementation
-            └── weather.py          # Weather tools using OpenWeather API
-```
-
 ## Architecture
 
 ### Infrastructure Components
@@ -164,21 +146,4 @@ The server implements comprehensive error handling:
 - AWS CLI configured with appropriate permissions
 - Terraform (for infrastructure deployment)
 
-### Local Development
-
-1. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-
-2. Run the server locally:
-   ```
-   export OPENWEATHER_API_KEY=your_api_key_here
-   python -m mcp-eks-demo.mcp.server
-   ```
-
-3. Test with the client:
-   ```
-   python -m mcp-eks-demo.mcp.mcp_client localhost:8000 "London"
-   ```
 
