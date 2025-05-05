@@ -25,7 +25,6 @@ This project demonstrates how to build and deploy an MCP-compliant server that u
 ### Client Components
 
 - **MCP Client**: A Python client that demonstrates how to interact with the MCP server
-- **Non-Streaming Mode**: Supports simple one-shot requests for weather data
 
 ## EKS Deployment
 
@@ -36,14 +35,6 @@ This project demonstrates how to deploy an MCP server on Amazon EKS with the fol
 3. **ECR Integration**: Stores and manages container images
 4. **Kubernetes Secrets**: Securely manages the OpenWeather API key
 
-### Deployment Process
-
-1. **EKS Cluster Setup**: Create an EKS cluster with BottleRocket MNG using Terraform
-2. **ALB Controller Installation**: Deploy the AWS ALB Controller for ingress management
-3. **Container Build**: Build the Docker image for the MCP server
-4. **ECR Push**: Push the image to Amazon ECR
-5. **Kubernetes Deployment**: Deploy the MCP server with appropriate resources and ingress
-
 ## Server-Sent Events (SSE) Implementation
 
 The server implements the Server-Sent Events (SSE) protocol for streaming responses, which offers several advantages:
@@ -52,14 +43,6 @@ The server implements the Server-Sent Events (SSE) protocol for streaming respon
 2. **Simple Protocol**: Uses standard HTTP with a specialized content type (`text/event-stream`)
 3. **Automatic Reconnection**: Browsers automatically attempt to reconnect if the connection is dropped
 4. **Event Formatting**: Messages are sent with a `data:` prefix and separated by double newlines
-
-### SSE Flow in the MCP Server
-
-1. **Initial Connection**: Client makes a POST request to `/v1/mcp` with `stream: true`
-2. **Session Creation**: Server generates a unique session ID and returns an SSE endpoint URL
-3. **Stream Establishment**: Client connects to the SSE endpoint with the session ID
-4. **Data Streaming**: Server streams weather data as formatted SSE events
-5. **Session Management**: Server maintains active sessions with expiration handling
 
 ## MCP Tool Implementation
 
@@ -74,7 +57,15 @@ Tools are registered in the FastMCP instance's `tools` dictionary, making them a
 result = await weather_mcp.tools["get_current_weather"].function(city=city)
 ```
 
-## Usage
+## Deploy and Test
+
+### Prerequisites
+
+- Python 3.10 or higher
+- Docker
+- kubectl configured for your EKS cluster
+- AWS CLI configured with appropriate permissions
+- Terraform (for infrastructure deployment)
 
 ### Server Setup
 
@@ -107,7 +98,7 @@ This will build the Docker container with the MCP Server and the tools code, cre
 
 5. Get the ALB URL:
    ```
-   kubectl get ingress mcp-server-py-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+   export ALB_URL=$(kubectl get ingress mcp-server-py-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
    ```
 
 ### MCP Client Usage
@@ -129,7 +120,7 @@ The MCP client supports both current weather and forecast queries:
 - `OPENWEATHER_API_KEY`: Required for API access
 - `PORT`: Server port (default: 8000)
 - `LOG_LEVEL`: Logging level (default: INFO)
-- `HTTPX_TIMEOUT`: HTTP request timeout in seconds (default: 5)
+- `HTTP_TIMEOUT`: HTTP request timeout in seconds (default: 5)
 
 ## Security Considerations
 
@@ -145,15 +136,3 @@ The server implements comprehensive error handling:
 - City not found errors
 - General API errors
 - Session management errors
-
-## Development
-
-### Prerequisites
-
-- Python 3.10 or higher
-- Docker
-- kubectl configured for your EKS cluster
-- AWS CLI configured with appropriate permissions
-- Terraform (for infrastructure deployment)
-
-
