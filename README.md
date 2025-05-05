@@ -120,7 +120,7 @@ The MCP client supports both current weather and forecast queries:
 - `OPENWEATHER_API_KEY`: Required for API access
 - `PORT`: Server port (default: 8000)
 - `LOG_LEVEL`: Logging level (default: INFO)
-- `HTTP_TIMEOUT`: HTTP request timeout in seconds (default: 5)
+- `HTTPX_TIMEOUT`: HTTP request timeout in seconds (default: 5)
 
 ## Security Considerations
 
