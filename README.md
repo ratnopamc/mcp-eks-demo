@@ -81,26 +81,36 @@ result = await weather_mcp.tools["get_current_weather"].function(city=city)
 1. Clone the repository:
    ```
    git clone <repository-url>
-   cd mcp-eks-example
+   cd mcp-eks-demo
    ```
+2. Put your openweather API_Key in .tfvar file
+   
+   ```
+   openweather_api_key=<your_api_key>
+   ```   
 
-2. Set up the OpenWeather API key:
-   ```
-   kubectl create secret generic openweather-api --from-literal=API_KEY=your_api_key_here
-   ```
+3. Deploy the EKS cluster with the command
 
-3. Build and deploy the server:
+```
+terraform apply --var-file=terraform.tfvars --auto-approve
+```
+
+This command will create the EKS Cluster with BottleRocket AMI based Managed Node Groups and also create kubernetes secret from the openweather API Key.
+
+4. Build and deploy the MCP server:
    ```
    cd mcp-eks-demo/mcp
    ./build-deploy.sh
    ```
+This will build the Docker container with the MCP Server and the tools code, create an ECR repository and push the image. It will also create deployment YAML with Deployment, Service and Ingress resources.
 
-4. Get the ALB URL:
+
+5. Get the ALB URL:
    ```
    kubectl get ingress mcp-server-py-ingress -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
    ```
 
-### Client Usage
+### MCP Client Usage
 
 The MCP client supports both current weather and forecast queries:
 
