@@ -1,4 +1,4 @@
-# MCP Weather Server
+# Build and Deploy Remote MCP Server on Amazon EKS
 
 A Python-based implementation of a Machine Conversation Protocol (MCP) server that provides weather information using the OpenWeather API.
 
